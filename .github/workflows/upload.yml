@@ -1,0 +1,24 @@
+name: Upload image
+
+on:
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: "Filename to upload"
+        required: true
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Copy uploaded file
+        run: |
+          git config user.name keaeye
+          git config user.email your@email.com
+          cp /tmp/${{ github.event.inputs.filename }} .
+          git add ${{ github.event.inputs.filename }}
+          git commit -m "Add ${{ github.event.inputs.filename }}"
+          git push
