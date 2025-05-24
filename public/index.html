@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>图床 - 上传图片</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f4f4f4; }
+    input[type=file] { margin-bottom: 1em; }
+    #result { margin-top: 1em; }
+    img { max-width: 200px; margin: 0.5em; }
+  </style>
+</head>
+<body>
+  <h1>上传图片到图床</h1>
+  <input type="file" id="file" multiple />
+  <button onclick="upload()">上传</button>
+  <div id="result"></div>
+
+  <script>
+    async function upload() {
+      const files = document.getElementById('file').files;
+      const result = document.getElementById('result');
+      result.innerHTML = "上传中...";
+      const formData = new FormData();
+      for (let f of files) formData.append('file', f);
+      const res = await fetch("https://img1backend.keaeye.fun/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      result.innerHTML = '';
+      json.urls.forEach(url => {
+        result.innerHTML += `<div><a href="${url}" target="_blank">${url}</a><br><img src="${url}"/></div>`;
+      });
+    }
+  </script>
+</body>
+</html>
